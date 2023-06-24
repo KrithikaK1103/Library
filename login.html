@@ -10,13 +10,20 @@
 
 <style>
     body {
-      font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-image: url('https://www.stallionglobal.com/uploads/links/Title_68.jpg');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
+      animation: backgroundAnimation 20s infinite;;
+    }
+
+    @keyframes backgroundAnimation {
+      0% { background-position: 0 0; }
+      50% { background-position: 50% 0; }
+      100% { background-position: 100% 0; }
     }
 
     header {
@@ -25,7 +32,7 @@
       padding: 10px;
       text-align: center;
       font-size: 24px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     main {
@@ -33,7 +40,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 68vh;
+      min-height: 70vh;
     }
 
     form {
