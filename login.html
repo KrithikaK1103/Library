@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management - Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://www.stallionglobal.com/uploads/links/Title_68.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 68vh;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: 50px auto;
+    }
+
+    h2 {
+      font-size: 40px;
+      margin-bottom: 50px;
+      color: #f9f7f7;
+      margin-top: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      padding: 10px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-size: 25px;
+    }
+
+    button[type="submit"] {
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      height: 40px;
+      width: 120px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #555;
+    }
+
+    .login-option {
+      display: none;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+
+<body>
+  <header>
+    <h1>Library Management - Login</h1>
+  </header>
+
+  <main>
+    <!-- Login form -->
+    <form id="login-form" action="" method="POST">
+      <!-- Select login option -->
+      <h2>Select Login Option</h2>
+      <select id="login-option">
+        <option value="mobile">Mobile Number</option>
+        <option value="social">Social Media</option>
+        <option value="email">Email</option>
+      </select>
+
+      <!-- Mobile login -->
+      <div id="mobile-login" class="login-option">
+        <h2>Sign in with Mobile Number</h2>
+        <input type="tel" name="mobile" placeholder="Mobile Number"  required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </div>
+
+      <!-- Social media login -->
+      <div id="social-login" class="login-option">
+        <h2>Sign in with Social Media</h2>
+        <a href="#" class="social-login facebook">Sign in with Facebook</a>
+        <a href="#" class="social-login google">Sign in with Google</a>
+        <a href="#" class="social-login twitter">Sign in with Twitter</a>
+      </div>
+
+      <!-- Email login -->
+      <div id="email-login" class="login-option">
+        <h2>Sign in with Email</h2>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Library Management. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Get login form and login option select element
+    const loginForm = document.getElementById('login-form');
+    const loginOptionSelect = document.getElementById('login-option');
+
+    // Get login option sections
+    const mobileLoginSection = document.getElementById('mobile-login');
+    const socialLoginSection = document.getElementById('social-login');
+    const emailLoginSection = document.getElementById('email-login');
+
+    // Hide all login option sections initially
+    mobileLoginSection.style.display = 'none';
+    socialLoginSection.style.display = 'none';
+    emailLoginSection.style.display = 'none';
+
+    // Show the selected login option section
+    loginOptionSelect.addEventListener('change', function () {
+      const selectedOption = loginOptionSelect.value;
+
+      // Hide all login option sections
+      mobileLoginSection.style.display = 'none';
+      socialLoginSection.style.display = 'none';
+      emailLoginSection.style.display = 'none';
+
+      // Show the selected login option section
+      if (selectedOption === 'mobile') {
+        mobileLoginSection.style.display = 'block';
+      } else if (selectedOption === 'social') {
+        socialLoginSection.style.display = 'block';
+      } else if (selectedOption === 'email') {
+        emailLoginSection.style.display = 'block';
+      }
+    });
+
+    // Handle form submission
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      
+      // Perform login based on selected option
+      const selectedOption = loginOptionSelect.value;
+      
+      if (selectedOption === 'mobile') {
+        // Handle mobile login form submission
+        const mobileNumber = document.querySelector('#mobile-login input[name="mobile"]').value;
+        const password = document.querySelector('#mobile-login input[name="password"]').value;
+        // Perform mobile login logic here
+        // Redirect to the appropriate page
+        window.location.href = '/mobile-login-page';
+      } else if (selectedOption === 'social') {
+        // Handle social media login form submission
+        // Perform social media login logic here
+        // Redirect to the appropriate page
+        window.location.href = '/social-login-page';
+      } else if (selectedOption === 'email') {
+        // Handle email login form submission
+        const email = document.querySelector('#email-login input[name="email"]').value;
+        const password = document.querySelector('#email-login input[name="password"]').value;
+        // Perform email login logic here
+        // Redirect to the appropriate page
+        window.location.href = '/email-login-page';
+      }
+    });
+  </script>
+</body>
+
+</html>
