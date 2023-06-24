@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management - Book List</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://www.stallionglobal.com/uploads/links/Title_68.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      animation: backgroundAnimation 20s infinite;;
+    }
+
+    @keyframes backgroundAnimation {
+      0% { background-position: 0 0; }
+      50% { background-position: 50% 0; }
+      100% { background-position: 100% 0; }
+    }
+    h1 {
+      text-align: center;
+      margin-top: 50px; padding: 20px;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 60px;
+      
+    }
+
+    .search-bar {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 40px;
+    }
+
+    .search-bar input[type="text"] {
+      width: 400px;
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 30px;
+    }
+
+    .search-bar button {
+      padding: 8px 16px;
+      font-size: 30px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background-color: #555;
+      font-size: 30px;
+    }
+
+    .filter-sort-options {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 30px;
+    }
+
+    .filter-sort-options label{
+      margin: 5px;
+      font-size: 30px;
+    }
+
+    #book-list {
+      list-style-type: none;
+      padding: 0;
+      font-size: 30px;
+    }
+
+    .filter-sort-options select 
+    {
+      margin: 5px;
+      font-size: 30px;
+      color: white;
+    }
+
+    #book-list li {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      color: white;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+      color: white;
+    }
+
+    .pagination button {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      height: 50px;
+      width: 100px;
+    }
+
+    .pagination button:hover {
+      background-color: #555;
+    }
+
+    #cart-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 22px;
+      margin-top: 75px;
+    }
+
+    #cart-button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <header>Library Management</header>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search by book name, genre, author name">
+    <button id="search-btn">Search</button>
+  </div>
+
+  <!-- Filter and Sort Options -->
+  <div class="filter-sort-options">
+    <label for="filter-select">Filter by:</label>
+    <select id="filter-select">
+      <option value="">All</option>
+      <option value="author">Author</option>
+      <option value="genre">Genre</option>
+      <option value="subject">Subject</option>
+      <option value="publishdate">Publish Date</option>
+    </select>
+
+    <label for="sort-select">Sort by:</label>
+    <select id="sort-select">
+      <option value="relevance">Relevance</option>
+      <option value="lowtohighcost">Low to high cost</option>
+      <option value="hightolowcost">High to low cost</option>
+      <option value="popularity">Popularity</option>
+    </select>
+  </div>
+
+  <!-- Book List -->
+  <ul id="book-list"></ul>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button id="prev-page">Previous</button>
+    <span id="current-page">1</span>
+    <button id="next-page">Next</button>
+  </div>
+
+  <!-- Cart Button -->
+  <button id="cart-button">Go to Cart</button>
+
+  <script>
+    // Simulated book data
+    let books = [
+      { title: "Book 1", author: "Author 1", genre: "Genre 1", copies: 5 },
+      { title: "Book 2", author: "Author 2", genre: "Genre 2", copies: 3 },
+      { title: "Book 3", author: "Author 3", genre: "Genre 1", copies: 2 },
+      { title: "Book 4", author: "Author 2", genre: "Genre 3", copies: 7 },
+      { title: "Book 5", author: "Author 1", genre: "Genre 2", copies: 4 },
+      { title: "Book 6", author: "Author 3", genre: "Genre 1", copies: 1 },
+      // Add more books...
+    ];
+
+    const bookList = document.getElementById("book-list");
+    const searchInput = document.getElementById("search-input");
+    const searchBtn = document.getElementById("search-btn");
+    const filterSelect = document.getElementById("filter-select");
+    const sortSelect = document.getElementById("sort-select");
+    const prevPageBtn = document.getElementById("prev-page");
+    const nextPageBtn = document.getElementById("next-page");
+    const currentPageElement = document.getElementById("current-page");
+    const cartButton = document.getElementById("cart-button");
+
+    let currentPage = 1;
+    const booksPerPage = 3;
+    const selectedBooks = [];
+
+    // Function to display the current page of books
+    function displayBooks() {
+      const startIndex = (currentPage - 1) * booksPerPage;
+      const endIndex = startIndex + booksPerPage;
+      const currentBooks = books.slice(startIndex, endIndex);
+
+      bookList.innerHTML = "";
+
+      currentBooks.forEach((book) => {
+        const listItem = document.createElement("li");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = book.title;
+        checkbox.addEventListener("change", handleBookSelection);
+
+        const bookInfo = document.createElement("span");
+        bookInfo.textContent = `${book.title} by ${book.author} (${book.genre}) - ${book.copies} available copies`;
+
+        listItem.appendChild(checkbox);
+        listItem.appendChild(bookInfo);
+
+        bookList.appendChild(listItem);
+      });
+
+      currentPageElement.textContent = currentPage;
+    }
+
+    // Function to perform search based on the input value
+    function searchBooks() {
+      const searchQuery = searchInput.value.trim().toLowerCase();
+
+      if (searchQuery === "") {
+        displayBooks();
+        return;
+      }
+
+      const filteredBooks = books.filter((book) => {
+        return (
+          book.title.toLowerCase().includes(searchQuery) ||
+          book.author.toLowerCase().includes(searchQuery) ||
+          book.genre.toLowerCase().includes(searchQuery)
+        );
+      });
+
+      bookList.innerHTML = "";
+
+      filteredBooks.forEach((book) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${book.title} by ${book.author} (${book.genre}) - ${book.copies} available copies`;
+        bookList.appendChild(listItem);
+      });
+    }
+
+    // Function to handle filter and sort options changes
+    function handleOptionsChange() {
+      const filterValue = filterSelect.value;
+      const sortValue = sortSelect.value;
+
+      let filteredBooks = [...books];
+
+      if (filterValue !== "") {
+        filteredBooks = filteredBooks.filter((book) => book[filterValue] === filterValue);
+      }
+
+      filteredBooks.sort((a, b) => {
+        if (a[sortValue] < b[sortValue]) return -1;
+        if (a[sortValue] > b[sortValue]) return 1;
+        return 0;
+      });
+
+      books = filteredBooks;
+      currentPage = 1;
+
+      displayBooks();
+    }
+
+    // Function to handle previous page button click
+    function handlePrevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        displayBooks();
+      }
+    }
+
+    // Function to handle next page button click
+    function handleNextPage() {
+      const totalPages = Math.ceil(books.length / booksPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayBooks();
+      }
+    }
+
+    // Function to handle book selection
+    function handleBookSelection(event) {
+      const bookTitle = event.target.value;
+
+      if (event.target.checked) {
+        // Add the selected book to the cart
+        const selectedBook = books.find((book) => book.title === bookTitle);
+        selectedBooks.push(selectedBook);
+      } else {
+        // Remove the deselected book from the cart
+        const index = selectedBooks.findIndex((book) => book.title === bookTitle);
+        selectedBooks.splice(index, 1);
+      }
+    }
+
+    // Function to handle cart button click
+    function handleCartButtonClick() {
+      // Store the selected books in localStorage or pass them as a query parameter to the cart page
+      localStorage.setItem("selectedBooks", JSON.stringify(selectedBooks));
+
+      // Redirect to the cart page
+      window.location.href = "cart.html";
+    }
+
+    // Event listeners
+    searchBtn.addEventListener("click", searchBooks);
+    filterSelect.addEventListener("change", handleOptionsChange);
+    sortSelect.addEventListener("change", handleOptionsChange);
+    prevPageBtn.addEventListener("click", handlePrevPage);
+    nextPageBtn.addEventListener("click", handleNextPage);
+    cartButton.addEventListener("click", handleCartButtonClick);
+
+    // Initial display of books
+    displayBooks();
+  </script>
+
+<footer>
+    <p>&copy; 2023 Library Management. All rights reserved.</p>
+  </footer>
+
+</body>
+
+</html>
